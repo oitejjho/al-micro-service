@@ -3,7 +3,7 @@ package amlan.service;
 import amlan.exception.CustomException;
 import amlan.model.User;
 import amlan.repository.UserRepository;
-import amlan.security.JwtTokenProvider;
+import amlan.common.config.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -1,4 +1,4 @@
-package amlan.security;
+package amlan.common.config.security;
 
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

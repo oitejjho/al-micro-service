@@ -1,4 +1,4 @@
-package amlan.security;
+package amlan.common.config.security;
 
 import amlan.exception.CustomException;
 import amlan.model.Role;
