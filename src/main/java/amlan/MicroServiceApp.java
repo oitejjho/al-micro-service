@@ -3,6 +3,8 @@ package amlan;
 import amlan.model.Role;
 import amlan.model.User;
 import amlan.service.UserService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -15,6 +17,8 @@ import java.util.Arrays;
 
 @SpringBootApplication
 public class MicroServiceApp implements CommandLineRunner {
+
+    private static final Logger LOGGER = LogManager.getLogger(MicroServiceApp.class);
 
     @Autowired
     UserService userService;
@@ -30,6 +34,11 @@ public class MicroServiceApp implements CommandLineRunner {
 
     @Override
     public void run(String... params) throws Exception {
+
+        LOGGER.info("Info level log message");
+        LOGGER.debug("Debug level log message");
+        LOGGER.error("Error level log message");
+
         User admin = new User();
         admin.setUsername("admin");
         admin.setPassword("admin");
