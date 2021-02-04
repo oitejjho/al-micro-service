@@ -2,26 +2,29 @@ package amlan.employee.controller;
 
 import amlan.common.controller.ControllerSupport;
 import amlan.common.model.Response;
-import amlan.employee.dto.EmployeeResponseDTO;
-import amlan.employee.model.Employee;
+import amlan.employee.dto.EmployeeListDTO;
+import amlan.employee.dto.EmployeeResponse;
 import amlan.employee.service.EmployeeService;
-import amlan.user.dto.UserDataDTO;
-import amlan.user.model.User;
-import amlan.user.service.UserService;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/employees")
 @Api(tags = "employees")
 public class EmployeeController implements ControllerSupport {
+
+    private static final Logger LOG = LogManager.getLogger(EmployeeController.class);
 
     @Autowired
     private EmployeeService employeeService;
@@ -32,8 +35,24 @@ public class EmployeeController implements ControllerSupport {
     @GetMapping
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @ApiOperation(value = "${EmployeeController.get}")
-    public Response<List<EmployeeResponseDTO>> getEmployee(HttpServletRequest req) {
-        return success(employeeService.getEmployee(0, 10));
+    public Response<EmployeeResponse> getEmployee(@RequestParam(value = "page", required = false, defaultValue = "0") int page,
+                                                  @RequestParam(value = "size", required = false, defaultValue = "10") int size,
+                                                  HttpServletResponse response) {
+
+        LOG.info("Start getting employee page : {}, size {}", page, size);
+
+        EmployeeListDTO employeeListDTO = this.employeeService.getEmployee(page, size);
+        EmployeeResponse employeeResponse = EmployeeResponse.builder()
+                .employees(employeeListDTO.getEmployees())
+                .page(page)
+                .size(size)
+                .totalElementsInPage(employeeListDTO.getTotalElementsInPage())
+                .totalPages(employeeListDTO.getTotalPages())
+                .totalElements(employeeListDTO.getTotalElements())
+                .build();
+
+        LOG.info("Done getting employee page : {}, size {}", page, size);
+        return success(employeeResponse);
     }
 
     /*@PostMapping("/create")

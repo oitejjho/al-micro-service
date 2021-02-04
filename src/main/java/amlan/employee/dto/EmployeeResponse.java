@@ -1,40 +1,38 @@
 package amlan.employee.dto;
 
-import amlan.common.utils.PdpaUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.util.List;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class EmployeeResponseDTO {
+public class EmployeeResponse {
 
     @ApiModelProperty(position = 1)
-    private Integer id;
+    private List<EmployeeDTO> employees;
 
     @ApiModelProperty(position = 2)
-    private String firstName;
+    private int page;
 
     @ApiModelProperty(position = 3)
-    private String lastName;
+    private int size;
 
     @ApiModelProperty(position = 4)
-    private String email;
+    private int totalElementsInPage;
 
     @ApiModelProperty(position = 5)
-    private String career;
+    private long totalPages;
 
-    public void setEmail(String email){
-        this.email = PdpaUtils.maskEmail(email);
-    }
+    @ApiModelProperty(position = 6)
+    private long totalElements;
 
 }
