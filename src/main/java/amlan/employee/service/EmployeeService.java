@@ -1,11 +1,11 @@
 package amlan.employee.service;
 
 import amlan.common.constant.StatusConstants;
-import amlan.common.exception.CustomException;
+import amlan.common.exception.DuplicateEntityException;
 import amlan.common.exception.NotFoundException;
-import amlan.common.exception.ServiceException;
 import amlan.employee.dto.EmployeeDTO;
 import amlan.employee.dto.EmployeeListDTO;
+import amlan.employee.dto.EmployeeRequest;
 import amlan.employee.model.Employee;
 import amlan.employee.repository.EmployeeRepository;
 import org.apache.logging.log4j.LogManager;
@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -71,4 +70,56 @@ public class EmployeeService {
 
     }
 
+    public EmployeeDTO create(Employee employee) {
+
+        LOG.info("Start creating employee");
+
+        Optional<Employee> employeeOptional = employeeRepository.findByEmail(employee.getEmail());
+        if (employeeOptional.isPresent()) {
+            LOG.error("Failed creating employee same email exists in database");
+            throw new DuplicateEntityException(StatusConstants.HttpConstants.EMPLOYEE_EMAIL_ALREADY_EXISTS);
+        }
+
+        Employee employeeEntity = employeeRepository.save(employee);
+        EmployeeDTO employeeDTO = this.modelMapper.map(employeeEntity, EmployeeDTO.class);
+
+        LOG.info("Start creating employee");
+        return employeeDTO;
+    }
+
+    public EmployeeDTO update(Integer employeeId, EmployeeRequest employee) {
+        LOG.info("Start updating employee");
+
+        Optional<Employee> existingEmployeeOptional = employeeRepository.findById(employeeId);
+        if (!existingEmployeeOptional.isPresent()) {
+            LOG.error("Failed updating employee same email exists in database");
+            throw new NotFoundException(StatusConstants.HttpConstants.EMPLOYEE_DOES_NOT_EXIST);
+        }
+
+        Employee existingEmployee = existingEmployeeOptional.get();
+        if (!existingEmployee.getEmail().equalsIgnoreCase(employee.getEmail())) {
+            Optional<Employee> employeeOptional = employeeRepository.findByEmail(employee.getEmail());
+            if (employeeOptional.isPresent()) {
+                LOG.error("Failed updating employee same email exists in database");
+                throw new DuplicateEntityException(StatusConstants.HttpConstants.EMPLOYEE_EMAIL_ALREADY_EXISTS);
+            }
+        }
+
+        existingEmployee.setFirstName(employee.getFirstName());
+        existingEmployee.setLastName(employee.getLastName());
+        existingEmployee.setEmail(employee.getEmail());
+        existingEmployee.setCareer(employee.getCareer());
+
+        Employee employeeEntity = employeeRepository.save(existingEmployee);
+        EmployeeDTO employeeDTO = this.modelMapper.map(employeeEntity, EmployeeDTO.class);
+
+        LOG.info("Done updating employee");
+        return employeeDTO;
+    }
+
+    public void delete(Integer employeeId) {
+        LOG.info("Start deleting employee");
+        employeeRepository.deleteById(employeeId);
+        LOG.info("Start deleting employee");
+    }
 }

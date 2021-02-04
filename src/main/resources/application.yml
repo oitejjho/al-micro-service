@@ -37,3 +37,6 @@ UserController:
 EmployeeController:
   get: Returns all employees by pagination
   getByEmployeeId: Returns employee by employee id
+  create : Create employee
+  update : Update employee
+  delete : Delete employee

@@ -17,4 +17,6 @@ public interface EmployeeRepository extends PagingAndSortingRepository<Employee,
 
     Optional<Employee> findById(Integer id);
 
+    Optional<Employee> findByEmail(String email);
+
 }

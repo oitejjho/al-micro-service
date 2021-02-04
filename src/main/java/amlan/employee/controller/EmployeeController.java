@@ -1,15 +1,19 @@
 package amlan.employee.controller;
 
+import amlan.common.constant.StatusConstants;
 import amlan.common.controller.ControllerSupport;
+import amlan.common.exception.DuplicateEntityException;
+import amlan.common.exception.InvalidRequestException;
 import amlan.common.exception.NotFoundException;
-import amlan.common.exception.ServiceException;
 import amlan.common.model.Response;
 import amlan.employee.dto.EmployeeDTO;
 import amlan.employee.dto.EmployeeListDTO;
+import amlan.employee.dto.EmployeeRequest;
 import amlan.employee.dto.EmployeeResponse;
+import amlan.employee.model.Employee;
 import amlan.employee.service.EmployeeService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
@@ -59,7 +63,7 @@ public class EmployeeController implements ControllerSupport {
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @ApiOperation(value = "${EmployeeController.getByEmployeeId}")
     public Response<EmployeeDTO> getEmployeeById(@PathVariable Integer employeeId,
-                                             HttpServletResponse response) {
+                                                 HttpServletResponse response) {
 
 
         try {
@@ -77,61 +81,107 @@ public class EmployeeController implements ControllerSupport {
 
     }
 
-    /*@PostMapping("/create")
+    @PostMapping()
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "${EmployeeController.create}")
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Something went wrong"),
-            @ApiResponse(code = 403, message = "Access denied"),
-            @ApiResponse(code = 422, message = "Username is already in use")})
-    public String create(@ApiParam("Signup User") @RequestBody UserDataDTO user) {
-        return userService.signup(modelMapper.map(user, User.class));
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 403, message = "Access denied")})
+    public Response<EmployeeDTO> create(@ApiParam("Create employee") @RequestBody EmployeeRequest employee,
+                                        HttpServletResponse response) {
+        try {
+            LOG.info("Start creating employee");
+            if (StringUtils.isEmpty(employee.getFirstName())) {
+                throw new InvalidRequestException(StatusConstants.HttpConstants.EMPLOYEE_FIRST_NAME_IS_REQUIRED);
+            }
+            if (StringUtils.isEmpty(employee.getLastName())) {
+                throw new InvalidRequestException(StatusConstants.HttpConstants.EMPLOYEE_LAST_NAME_IS_REQUIRED);
+            }
+            if (StringUtils.isEmpty(employee.getEmail())) {
+                throw new InvalidRequestException(StatusConstants.HttpConstants.EMPLOYEE_EMAIL_IS_REQUIRED);
+            }
+            EmployeeDTO employeeDTO = employeeService.create(modelMapper.map(employee, Employee.class));
+            LOG.info("Done creating employee");
+            return created(employeeDTO, response);
+        } catch (InvalidRequestException e) {
+            LOG.error("Failed creating employee with bad request: {}, {}", e, e.getMessage());
+            return badRequest(e.getStatus(), response);
+        } catch (DuplicateEntityException e) {
+            LOG.error("Failed creating employee with bad request: {}, {}", e, e.getMessage());
+            return badRequest(e.getStatus(), response);
+        } catch (Exception e) {
+            LOG.error("Failed creating employee error: {}, {}", e, e.getMessage());
+            return serverError(response);
+        }
+
     }
 
-    @PostMapping("/signin")
-    @ApiOperation(value = "${UserController.signin}")
+    @PutMapping("/{employeeId:.+}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @ApiOperation(value = "${EmployeeController.update}")
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Something went wrong"),
-            @ApiResponse(code = 422, message = "Invalid username/password supplied")})
-    public String login(@ApiParam("Username") @RequestParam String username,
-                        @ApiParam("Password") @RequestParam String password) {
-        return userService.signin(username, password);
-    }*/
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 403, message = "Access denied")})
+    public Response<EmployeeDTO> update(@PathVariable Integer employeeId,
+                                        @ApiParam("Create employee") @RequestBody EmployeeRequest employee,
+                                        HttpServletResponse response) {
+        try {
+            LOG.info("Start updating employee by employee id : {}", employeeId);
+            if (StringUtils.isEmpty(employee.getFirstName())) {
+                throw new InvalidRequestException(StatusConstants.HttpConstants.EMPLOYEE_FIRST_NAME_IS_REQUIRED);
+            }
+            if (StringUtils.isEmpty(employee.getLastName())) {
+                throw new InvalidRequestException(StatusConstants.HttpConstants.EMPLOYEE_LAST_NAME_IS_REQUIRED);
+            }
+            if (StringUtils.isEmpty(employee.getEmail())) {
+                throw new InvalidRequestException(StatusConstants.HttpConstants.EMPLOYEE_EMAIL_IS_REQUIRED);
+            }
+            EmployeeDTO employeeDTO = employeeService.update(employeeId, employee);
+            LOG.info("Start updating employee by employee id : {}", employeeId);
+            return updated(response);
+        } catch (InvalidRequestException e) {
+            LOG.error("Failed updating employee with bad request: {}, {}", e, e.getMessage());
+            return badRequest(e.getStatus(), response);
+        } catch (NotFoundException e) {
+            LOG.error("Failed updating employee with bad request: {}, {}", e, e.getMessage());
+            return badRequest(e.getStatus(), response);
+        } catch (DuplicateEntityException e) {
+            LOG.error("Failed updating employee with bad request: {}, {}", e, e.getMessage());
+            return badRequest(e.getStatus(), response);
+        } catch (Exception e) {
+            LOG.error("Failed updating employee error: {}, {}", e, e.getMessage());
+            return serverError(response);
+        }
 
-  /*@DeleteMapping(value = "/{username}")
-  @PreAuthorize("hasRole('ROLE_ADMIN')")
-  @ApiOperation(value = "${UserController.delete}", authorizations = { @Authorization(value="apiKey") })
-  @ApiResponses(value = {//
-      @ApiResponse(code = 400, message = "Something went wrong"), //
-      @ApiResponse(code = 403, message = "Access denied"), //
-      @ApiResponse(code = 404, message = "The user doesn't exist"), //
-      @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-  public String delete(@ApiParam("Username") @PathVariable String username) {
-    userService.delete(username);
-    return username;
-  }*/
+    }
 
-  /*@GetMapping(value = "/{username}")
-  @PreAuthorize("hasRole('ROLE_ADMIN')")
-  @ApiOperation(value = "${UserController.search}", response = UserResponseDTO.class, authorizations = { @Authorization(value="apiKey") })
-  @ApiResponses(value = {//
-      @ApiResponse(code = 400, message = "Something went wrong"), //
-      @ApiResponse(code = 403, message = "Access denied"), //
-      @ApiResponse(code = 404, message = "The user doesn't exist"), //
-      @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-  public UserResponseDTO search(@ApiParam("Username") @PathVariable String username) {
-    return modelMapper.map(userService.search(username), UserResponseDTO.class);
-  }*/
+    @DeleteMapping("/{employeeId:.+}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @ApiOperation(value = "${EmployeeController.delete}")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 403, message = "Access denied")})
+    public Response delete(@PathVariable Integer employeeId, HttpServletResponse response) {
+        try {
+            LOG.info("Start deleting employee by employee id : {}", employeeId);
+            employeeService.delete(employeeId);
+            LOG.info("Start deleting employee by employee id : {}", employeeId);
+            return updated(response);
+        } catch (InvalidRequestException e) {
+            LOG.error("Failed deleting employee with bad request: {}, {}", e, e.getMessage());
+            return badRequest(e.getStatus(), response);
+        } catch (NotFoundException e) {
+            LOG.error("Failed deleting employee with bad request: {}, {}", e, e.getMessage());
+            return badRequest(e.getStatus(), response);
+        } catch (DuplicateEntityException e) {
+            LOG.error("Failed deleting employee with bad request: {}, {}", e, e.getMessage());
+            return badRequest(e.getStatus(), response);
+        } catch (Exception e) {
+            LOG.error("Failed deleting employee error: {}, {}", e, e.getMessage());
+            return serverError(response);
+        }
 
-  /*@GetMapping(value = "/me")
-  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
-  @ApiOperation(value = "${UserController.me}", response = UserResponseDTO.class, authorizations = { @Authorization(value="apiKey") })
-  @ApiResponses(value = {//
-      @ApiResponse(code = 400, message = "Something went wrong"), //
-      @ApiResponse(code = 403, message = "Access denied"), //
-      @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-  public UserResponseDTO whoami(HttpServletRequest req) {
-    return modelMapper.map(userService.whoami(req), UserResponseDTO.class);
-  }*/
+    }
 
 
 }

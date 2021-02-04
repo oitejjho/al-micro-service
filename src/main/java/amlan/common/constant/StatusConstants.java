@@ -13,6 +13,16 @@ public class StatusConstants {
 
         EMPLOYEE_NOT_FOUND(1, "Employee not found"),
 
+        EMPLOYEE_FIRST_NAME_IS_REQUIRED(2, "Employee first name is required"),
+
+        EMPLOYEE_LAST_NAME_IS_REQUIRED(3, "Employee last name is required"),
+
+        EMPLOYEE_EMAIL_IS_REQUIRED(4, "Employee email is required"),
+
+        EMPLOYEE_EMAIL_ALREADY_EXISTS(5, "Employee email already exists"),
+
+        EMPLOYEE_DOES_NOT_EXIST(6, "Employee does not exists"),
+
         EXTERNAL_SERVER_ERROR(35_998, "External Server Error"),
 
         INTERNAL_SERVER_ERROR(35_999, "Internal Server Error");

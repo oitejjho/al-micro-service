@@ -17,6 +17,26 @@ public interface ControllerSupport {
         return new Response<>(new Status(StatusConstants.HttpConstants.SUCCESS));
     }
 
+    default <T> Response<T> created(HttpServletResponse response) {
+        response.setStatus(HttpStatus.CREATED.value());
+        return new Response<>(new Status(StatusConstants.HttpConstants.SUCCESS));
+    }
+
+    default <T> Response<T> created(T data, HttpServletResponse response) {
+        response.setStatus(HttpStatus.CREATED.value());
+        return new Response<>(new Status(StatusConstants.HttpConstants.SUCCESS), data);
+    }
+
+    default <T> Response<T> updated(HttpServletResponse response) {
+        response.setStatus(HttpStatus.NO_CONTENT.value());
+        return new Response<>(new Status(StatusConstants.HttpConstants.SUCCESS));
+    }
+
+    default <T> Response<T> updated(T data, HttpServletResponse response) {
+        response.setStatus(HttpStatus.NO_CONTENT.value());
+        return new Response<>(new Status(StatusConstants.HttpConstants.SUCCESS), data);
+    }
+
     default <T> Response<T> badRequest(StatusConstants.HttpConstants httpConstants, HttpServletResponse response) {
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         return new Response<>(new Status(httpConstants));
