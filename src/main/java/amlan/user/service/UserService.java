@@ -1,8 +1,8 @@
-package amlan.service;
+package amlan.user.service;
 
-import amlan.exception.CustomException;
-import amlan.model.User;
-import amlan.repository.UserRepository;
+import amlan.common.exception.CustomException;
+import amlan.user.model.User;
+import amlan.user.repository.UserRepository;
 import amlan.common.config.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

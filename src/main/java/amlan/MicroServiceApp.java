@@ -1,8 +1,8 @@
 package amlan;
 
-import amlan.model.Role;
-import amlan.model.User;
-import amlan.service.UserService;
+import amlan.user.model.Role;
+import amlan.user.model.User;
+import amlan.user.service.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;

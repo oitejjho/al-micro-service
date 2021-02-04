@@ -1,6 +1,6 @@
-package amlan.repository;
+package amlan.user.repository;
 
-import amlan.model.User;
+import amlan.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.transaction.Transactional;

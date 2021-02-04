@@ -1,7 +1,7 @@
 package amlan.common.config.security;
 
-import amlan.exception.CustomException;
-import amlan.model.Role;
+import amlan.common.exception.CustomException;
+import amlan.user.model.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;

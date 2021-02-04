@@ -1,4 +1,4 @@
-package amlan.exception;
+package amlan.common.exception;
 
 import org.springframework.http.HttpStatus;
 

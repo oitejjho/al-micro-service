@@ -1,4 +1,4 @@
-package amlan.model;
+package amlan.user.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;

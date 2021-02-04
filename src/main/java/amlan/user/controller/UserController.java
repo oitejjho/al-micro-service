@@ -1,8 +1,8 @@
-package amlan.controller;
+package amlan.user.controller;
 
-import amlan.dto.UserDataDTO;
-import amlan.model.User;
-import amlan.service.UserService;
+import amlan.user.dto.UserDataDTO;
+import amlan.user.model.User;
+import amlan.user.service.UserService;
 import io.swagger.annotations.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

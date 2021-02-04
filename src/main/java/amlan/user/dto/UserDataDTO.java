@@ -1,28 +1,20 @@
-package amlan.dto;
+package amlan.user.dto;
 
-import amlan.model.Role;
+import amlan.user.model.Role;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
-public class UserResponseDTO {
+public class UserDataDTO {
 
     @ApiModelProperty(position = 3)
     List<Role> roles;
     @ApiModelProperty(position = 0)
-    private Integer id;
-    @ApiModelProperty(position = 1)
     private String username;
-    @ApiModelProperty(position = 2)
+    @ApiModelProperty(position = 1)
     private String email;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    @ApiModelProperty(position = 2)
+    private String password;
 
     public String getUsername() {
         return username;
@@ -38,6 +30,14 @@ public class UserResponseDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public List<Role> getRoles() {
