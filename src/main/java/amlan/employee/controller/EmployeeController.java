@@ -54,10 +54,10 @@ public class EmployeeController implements ControllerSupport {
         return success(employeeResponse);
     }
 
-    @GetMapping
+    @GetMapping("/{employeeId:.+}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @ApiOperation(value = "${EmployeeController.get}")
-    public Response<EmployeeDTO> getEmployee(@PathVariable Integer employeeId,
+    public Response<EmployeeDTO> getEmployeeById(@PathVariable Integer employeeId,
                                              HttpServletResponse response) {
 
 

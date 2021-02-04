@@ -27,12 +27,6 @@ public class EmployeeDTO {
 
     private String career;
 
-    private int page;
-
-    private int size;
-
-    private int totalElements;
-
     public void setEmail(String email) {
         this.email = PdpaUtils.maskEmail(email);
     }
