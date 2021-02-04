@@ -36,3 +36,4 @@ UserController:
 
 EmployeeController:
   get: Returns all employees by pagination
+  getByEmployeeId: Returns employee by employee id

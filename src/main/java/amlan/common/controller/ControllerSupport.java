@@ -22,6 +22,11 @@ public interface ControllerSupport {
         return new Response<>(new Status(httpConstants));
     }
 
+    default <T> Response<T> notFound(StatusConstants.HttpConstants httpConstants, HttpServletResponse response) {
+        response.setStatus(HttpStatus.NOT_FOUND.value());
+        return new Response<>(new Status(httpConstants));
+    }
+
     default <T> Response<T> serverError(StatusConstants.HttpConstants httpConstants, HttpServletResponse response) {
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         return new Response<>(new Status(httpConstants));

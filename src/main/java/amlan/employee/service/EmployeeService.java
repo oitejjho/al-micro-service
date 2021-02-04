@@ -2,6 +2,7 @@ package amlan.employee.service;
 
 import amlan.common.constant.StatusConstants;
 import amlan.common.exception.CustomException;
+import amlan.common.exception.NotFoundException;
 import amlan.common.exception.ServiceException;
 import amlan.employee.dto.EmployeeDTO;
 import amlan.employee.dto.EmployeeListDTO;
@@ -64,7 +65,8 @@ public class EmployeeService {
             LOG.info("Done getting employee by employee id : {}", employeeId);
             return employeeDTO;
         } else {
-            throw new ServiceException(StatusConstants.HttpConstants.EMPLOYEE_NOT_FOUND);
+            LOG.error("Failed getting employee by employee id : {}", employeeId);
+            throw new NotFoundException(StatusConstants.HttpConstants.EMPLOYEE_NOT_FOUND);
         }
 
     }

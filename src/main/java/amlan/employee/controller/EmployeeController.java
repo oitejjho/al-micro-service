@@ -1,6 +1,7 @@
 package amlan.employee.controller;
 
 import amlan.common.controller.ControllerSupport;
+import amlan.common.exception.NotFoundException;
 import amlan.common.exception.ServiceException;
 import amlan.common.model.Response;
 import amlan.employee.dto.EmployeeDTO;
@@ -56,7 +57,7 @@ public class EmployeeController implements ControllerSupport {
 
     @GetMapping("/{employeeId:.+}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
-    @ApiOperation(value = "${EmployeeController.get}")
+    @ApiOperation(value = "${EmployeeController.getByEmployeeId}")
     public Response<EmployeeDTO> getEmployeeById(@PathVariable Integer employeeId,
                                              HttpServletResponse response) {
 
@@ -66,9 +67,9 @@ public class EmployeeController implements ControllerSupport {
             EmployeeDTO employee = this.employeeService.getEmployee(employeeId);
             LOG.info("Done getting employee by employee id : {}", employeeId);
             return success(employee);
-        } catch (ServiceException e) {
+        } catch (NotFoundException e) {
             LOG.error("Failed getting employee by employee id : {} and error: {}, {}", employeeId, e.getStatus().getCode(), e.getStatus().getDesc());
-            return serverError(e.getStatus(), response);
+            return notFound(e.getStatus(), response);
         } catch (Exception e) {
             LOG.error("Failed getting employee by employee id : {} and error: {}, {}", employeeId, e, e.getMessage());
             return serverError(response);
