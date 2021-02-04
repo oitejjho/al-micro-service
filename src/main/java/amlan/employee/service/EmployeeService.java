@@ -41,8 +41,10 @@ public class EmployeeService {
         Page<Employee> employeePage = employeeRepository.findAll(pageable);
 
         List<EmployeeDTO> employees = employeePage.getContent().stream().parallel().map(employee -> modelMapper.map(employee, EmployeeDTO.class)).collect(Collectors.toList());
-
+        //can catch the exception from objectMapper.map method but for simplicity as of now not added
         EmployeeListDTO employeeListDTO = EmployeeListDTO.builder()
+                .page(page)
+                .size(employees.size())
                 .employees(employees)
                 .totalElementsInPage(employees.size())
                 .totalPages(employeePage.getTotalPages())
@@ -61,11 +63,12 @@ public class EmployeeService {
         Optional<Employee> employeeOptional = employeeRepository.findById(employeeId);
         if (employeeOptional.isPresent()) {
             EmployeeDTO employeeDTO = this.modelMapper.map(employeeOptional.get(), EmployeeDTO.class);
+            //can catch the exception from objectMapper.map method but for simplicity as of now not added
             LOG.info("Done getting employee by employee id : {}", employeeId);
             return employeeDTO;
         } else {
             LOG.error("Failed getting employee by employee id : {}", employeeId);
-            throw new NotFoundException(StatusConstants.HttpConstants.EMPLOYEE_NOT_FOUND);
+            throw new NotFoundException(StatusConstants.HttpConstants.EMPLOYEE_DOES_NOT_EXIST);
         }
 
     }
@@ -82,6 +85,7 @@ public class EmployeeService {
 
         Employee employeeEntity = employeeRepository.save(employee);
         EmployeeDTO employeeDTO = this.modelMapper.map(employeeEntity, EmployeeDTO.class);
+        //can catch the exception from objectMapper.map method but for simplicity as of now not added
 
         LOG.info("Start creating employee");
         return employeeDTO;
@@ -125,7 +129,7 @@ public class EmployeeService {
             LOG.info("Start deleting employee");
         } else {
             LOG.error("Failed getting employee by employee id : {}", employeeId);
-            throw new NotFoundException(StatusConstants.HttpConstants.EMPLOYEE_NOT_FOUND);
+            throw new NotFoundException(StatusConstants.HttpConstants.EMPLOYEE_DOES_NOT_EXIST);
         }
     }
 }

@@ -9,7 +9,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class PdpaUtilsTest {
 
     @Test
-    public void maskEmailSuccess(){
+    public void testMaskEmailSuccess(){
         String email = "oitejjho@gmail.com";
         String expectedMaskedEmail = "XXXejjhogmailcom";
         String actualMaskedEmail = PdpaUtils.maskEmail(email);
@@ -19,7 +19,7 @@ public class PdpaUtilsTest {
     }
 
     @Test
-    public void maskEmailWhereEmailIsNull(){
+    public void testMaskEmailWhereEmailIsNull(){
         String email = null;
         String expectedMaskedEmail = "";
         String actualMaskedEmail = PdpaUtils.maskEmail(email);
@@ -28,7 +28,7 @@ public class PdpaUtilsTest {
     }
 
     @Test
-    public void maskEmailWhereEmailIsEmpty(){
+    public void testMaskEmailWhereEmailIsEmpty(){
         String email = "";
         String expectedMaskedEmail = "";
         String actualMaskedEmail = PdpaUtils.maskEmail(email);
@@ -37,7 +37,7 @@ public class PdpaUtilsTest {
     }
 
     @Test
-    public void maskEmailWhereEmailLengthIsLessThanMaskLength(){
+    public void testMaskEmailWhereEmailLengthIsLessThanMaskLength(){
         String email = "a@";
         String expectedMaskedEmail = "a@";
         String actualMaskedEmail = PdpaUtils.maskEmail(email);
@@ -46,7 +46,7 @@ public class PdpaUtilsTest {
     }
 
     @Test
-    public void maskEmailWhereEmailLengthEqualMaskLength(){
+    public void testMaskEmailWhereEmailLengthEqualMaskLength(){
         String email = "a@b";
         String expectedMaskedEmail = "XXX";
         String actualMaskedEmail = PdpaUtils.maskEmail(email);
