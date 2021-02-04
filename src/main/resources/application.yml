@@ -33,3 +33,6 @@ UserController:
   delete: Deletes specific user by username
   search: Returns specific user by username
   me: Returns current user's data
+
+EmployeeController:
+  get: Returns all employees by pagination
