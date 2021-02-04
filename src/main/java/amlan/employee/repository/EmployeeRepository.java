@@ -15,4 +15,6 @@ public interface EmployeeRepository extends PagingAndSortingRepository<Employee,
 
     Page<Employee> findAll(Pageable pageable);
 
+    Optional<Employee> findById(Integer id);
+
 }

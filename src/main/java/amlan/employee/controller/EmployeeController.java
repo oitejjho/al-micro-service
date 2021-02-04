@@ -1,7 +1,9 @@
 package amlan.employee.controller;
 
 import amlan.common.controller.ControllerSupport;
+import amlan.common.exception.ServiceException;
 import amlan.common.model.Response;
+import amlan.employee.dto.EmployeeDTO;
 import amlan.employee.dto.EmployeeListDTO;
 import amlan.employee.dto.EmployeeResponse;
 import amlan.employee.service.EmployeeService;
@@ -12,10 +14,7 @@ import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -53,6 +52,28 @@ public class EmployeeController implements ControllerSupport {
 
         LOG.info("Done getting employee page : {}, size {}", page, size);
         return success(employeeResponse);
+    }
+
+    @GetMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+    @ApiOperation(value = "${EmployeeController.get}")
+    public Response<EmployeeDTO> getEmployee(@PathVariable Integer employeeId,
+                                             HttpServletResponse response) {
+
+
+        try {
+            LOG.info("Start getting employee by employee id : {}", employeeId);
+            EmployeeDTO employee = this.employeeService.getEmployee(employeeId);
+            LOG.info("Done getting employee by employee id : {}", employeeId);
+            return success(employee);
+        } catch (ServiceException e) {
+            LOG.error("Failed getting employee by employee id : {} and error: {}, {}", employeeId, e.getStatus().getCode(), e.getStatus().getDesc());
+            return serverError(e.getStatus(), response);
+        } catch (Exception e) {
+            LOG.error("Failed getting employee by employee id : {} and error: {}, {}", employeeId, e, e.getMessage());
+            return serverError(response);
+        }
+
     }
 
     /*@PostMapping("/create")

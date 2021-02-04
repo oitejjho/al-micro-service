@@ -11,6 +11,8 @@ public class StatusConstants {
 
         SUCCESS(0, "Success"),
 
+        EMPLOYEE_NOT_FOUND(1, "Employee not found"),
+
         EXTERNAL_SERVER_ERROR(35_998, "External Server Error"),
 
         INTERNAL_SERVER_ERROR(35_999, "Internal Server Error");

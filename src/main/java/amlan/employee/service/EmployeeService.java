@@ -1,6 +1,8 @@
 package amlan.employee.service;
 
-import amlan.employee.controller.EmployeeController;
+import amlan.common.constant.StatusConstants;
+import amlan.common.exception.CustomException;
+import amlan.common.exception.ServiceException;
 import amlan.employee.dto.EmployeeDTO;
 import amlan.employee.dto.EmployeeListDTO;
 import amlan.employee.model.Employee;
@@ -12,10 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,9 +49,24 @@ public class EmployeeService {
                 .totalElements(employeePage.getTotalElements())
                 .build();
 
-        LOG.info("Start getting employee page : {}, size {}", page, size);
+        LOG.info("Done getting employee page : {}, size {}", page, size);
 
         return employeeListDTO;
+    }
+
+    public EmployeeDTO getEmployee(Integer employeeId) {
+
+        LOG.info("Start getting employee by employee id : {}", employeeId);
+
+        Optional<Employee> employeeOptional = employeeRepository.findById(employeeId);
+        if (employeeOptional.isPresent()) {
+            EmployeeDTO employeeDTO = this.modelMapper.map(employeeOptional.get(), EmployeeDTO.class);
+            LOG.info("Done getting employee by employee id : {}", employeeId);
+            return employeeDTO;
+        } else {
+            throw new ServiceException(StatusConstants.HttpConstants.EMPLOYEE_NOT_FOUND);
+        }
+
     }
 
 }
