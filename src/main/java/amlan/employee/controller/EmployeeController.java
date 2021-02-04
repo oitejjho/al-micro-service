@@ -167,13 +167,7 @@ public class EmployeeController implements ControllerSupport {
             employeeService.delete(employeeId);
             LOG.info("Start deleting employee by employee id : {}", employeeId);
             return updated(response);
-        } catch (InvalidRequestException e) {
-            LOG.error("Failed deleting employee with bad request: {}, {}", e, e.getMessage());
-            return badRequest(e.getStatus(), response);
         } catch (NotFoundException e) {
-            LOG.error("Failed deleting employee with bad request: {}, {}", e, e.getMessage());
-            return badRequest(e.getStatus(), response);
-        } catch (DuplicateEntityException e) {
             LOG.error("Failed deleting employee with bad request: {}, {}", e, e.getMessage());
             return badRequest(e.getStatus(), response);
         } catch (Exception e) {

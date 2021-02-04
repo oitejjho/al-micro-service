@@ -29,7 +29,7 @@ public class EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    //can be override by spring converter for the simplicity used only model mapper
+    //can be override by spring converter or mapStruct for the simplicity used only model mapper
     @Autowired
     private ModelMapper modelMapper;
 
@@ -119,7 +119,13 @@ public class EmployeeService {
 
     public void delete(Integer employeeId) {
         LOG.info("Start deleting employee");
-        employeeRepository.deleteById(employeeId);
-        LOG.info("Start deleting employee");
+        Optional<Employee> employeeOptional = employeeRepository.findById(employeeId);
+        if (employeeOptional.isPresent()) {
+            employeeRepository.deleteById(employeeId);
+            LOG.info("Start deleting employee");
+        } else {
+            LOG.error("Failed getting employee by employee id : {}", employeeId);
+            throw new NotFoundException(StatusConstants.HttpConstants.EMPLOYEE_NOT_FOUND);
+        }
     }
 }
