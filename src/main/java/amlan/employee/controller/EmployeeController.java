@@ -102,8 +102,8 @@ public class EmployeeController implements ControllerSupport {
                 throw new InvalidRequestException(StatusConstants.HttpConstants.EMPLOYEE_EMAIL_IS_REQUIRED);
             }
             StringValidation emailValidation = amlan.common.utils.StringUtils::isValidEmail;
-            if (!emailValidation.isValid(employee.getEmail(), null)) {
-                throw new InvalidRequestException(StatusConstants.HttpConstants.EMPLOYEE_EMAIL_IS_INVALID);
+            if (!emailValidation.isValid(employee.getEmail())) {
+                throw new InvalidRequestException(StatusConstants.HttpConstants.EMAIL_IS_INVALID);
             }
             EmployeeDTO employeeDTO = employeeService.create(modelMapper.map(employee, Employee.class));
             LOG.info("Done creating employee");
@@ -142,8 +142,8 @@ public class EmployeeController implements ControllerSupport {
                 throw new InvalidRequestException(StatusConstants.HttpConstants.EMPLOYEE_EMAIL_IS_REQUIRED);
             }
             StringValidation emailValidation = amlan.common.utils.StringUtils::isValidEmail;
-            if (!emailValidation.isValid(employee.getEmail(), null)) {
-                throw new InvalidRequestException(StatusConstants.HttpConstants.EMPLOYEE_EMAIL_IS_INVALID);
+            if (!emailValidation.isValid(employee.getEmail())) {
+                throw new InvalidRequestException(StatusConstants.HttpConstants.EMAIL_IS_INVALID);
             }
             EmployeeDTO employeeDTO = employeeService.update(employeeId, employee);
             LOG.info("Start updating employee by employee id : {}", employeeId);

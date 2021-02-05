@@ -222,8 +222,8 @@ public class EmployeeControllerTest {
 
         Assert.assertNull(response.getData());
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), httpResponse.getStatus());
-        Assert.assertEquals(StatusConstants.HttpConstants.EMPLOYEE_EMAIL_IS_INVALID.getCode(), response.getStatus().getCode());
-        Assert.assertEquals(StatusConstants.HttpConstants.EMPLOYEE_EMAIL_IS_INVALID.getDesc(), response.getStatus().getMessage());
+        Assert.assertEquals(StatusConstants.HttpConstants.EMAIL_IS_INVALID.getCode(), response.getStatus().getCode());
+        Assert.assertEquals(StatusConstants.HttpConstants.EMAIL_IS_INVALID.getDesc(), response.getStatus().getMessage());
 
     }
 
@@ -324,8 +324,8 @@ public class EmployeeControllerTest {
 
         Assert.assertNull(response.getData());
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), httpResponse.getStatus());
-        Assert.assertEquals(StatusConstants.HttpConstants.EMPLOYEE_EMAIL_IS_INVALID.getCode(), response.getStatus().getCode());
-        Assert.assertEquals(StatusConstants.HttpConstants.EMPLOYEE_EMAIL_IS_INVALID.getDesc(), response.getStatus().getMessage());
+        Assert.assertEquals(StatusConstants.HttpConstants.EMAIL_IS_INVALID.getCode(), response.getStatus().getCode());
+        Assert.assertEquals(StatusConstants.HttpConstants.EMAIL_IS_INVALID.getDesc(), response.getStatus().getMessage());
 
     }
 

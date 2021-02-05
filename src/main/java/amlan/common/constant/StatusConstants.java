@@ -21,7 +21,11 @@ public class StatusConstants {
 
         EMPLOYEE_DOES_NOT_EXIST(5, "Employee does not exists"),
 
-        EMPLOYEE_EMAIL_IS_INVALID(7, "Employee email is invalid"),
+        EMAIL_IS_INVALID(7, "Email is invalid"),
+
+        PASSWORD_IS_INVALID(8, "Password is invalid"),
+
+        USERNAME_ALREADY_EXISTS(9, "Username already exists"),
 
         EXTERNAL_SERVER_ERROR(35_998, "External Server Error"),
 

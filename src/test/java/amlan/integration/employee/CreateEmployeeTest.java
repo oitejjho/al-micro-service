@@ -32,7 +32,7 @@ public class CreateEmployeeTest {
         //for the simplicity I used hardcoded value.
 
         ResponseEntity<String> adminResponseEntity = restTemplate.exchange(
-                "http://localhost:8080/users/signin?password=admin&username=admin",
+                "http://localhost:8080/users/signin?password=1Admin@1&username=admin",
                 HttpMethod.POST,
                 null,
                 String.class
@@ -40,7 +40,7 @@ public class CreateEmployeeTest {
         adminJwtToken = adminResponseEntity.getBody();
 
         ResponseEntity<String> clientResponseEntity = restTemplate.exchange(
-                "http://localhost:8080/users/signin?password=client&username=client",
+                "http://localhost:8080/users/signin?password=1Client@1&username=client",
                 HttpMethod.POST,
                 null,
                 String.class
@@ -209,7 +209,7 @@ public class CreateEmployeeTest {
 
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         assertEquals(new Integer(7), responseEntity.getBody().getStatus().getCode());
-        assertEquals("Employee email is invalid", responseEntity.getBody().getStatus().getMessage());
+        assertEquals("Email is invalid", responseEntity.getBody().getStatus().getMessage());
     }
 
 }

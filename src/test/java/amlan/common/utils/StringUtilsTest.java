@@ -9,25 +9,33 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class StringUtilsTest {
 
     @Test
-    public void testMaskEmailSuccess(){
+    public void testIsValidEmailSuccess(){
         String email = "oitejjho@gmail.com";
-        boolean actual = StringUtils.isValidEmail(email, null);
+        boolean actual = StringUtils.isValidEmail(email);
 
         Assert.assertEquals(true, actual);
     }
 
     @Test
-    public void testMaskEmailSuccessEmpty(){
-        String email = "oitejjho@gmail.com";
-        boolean actual = StringUtils.isValidEmail(email, "");
-
-        Assert.assertEquals(true, actual);
-    }
-
-    @Test
-    public void testMaskEmailSuccessInvalidEmail(){
+    public void testIsValidEmailSuccessInvalidEmail(){
         String email = "gmail.com";
-        boolean actual = StringUtils.isValidEmail(email, "");
+        boolean actual = StringUtils.isValidEmail(email);
+
+        Assert.assertEquals(false, actual);
+    }
+
+    @Test
+    public void testIsValidPasswordSuccess(){
+        String password = "1Admin@1";
+        boolean actual = StringUtils.isValidPassword(password);
+
+        Assert.assertEquals(true, actual);
+    }
+
+    @Test
+    public void testIsValidPasswordInvalidPassword(){
+        String email = "admin";
+        boolean actual = StringUtils.isValidEmail(email);
 
         Assert.assertEquals(false, actual);
     }

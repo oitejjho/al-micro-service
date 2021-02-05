@@ -33,7 +33,7 @@ public class MicroServiceApp implements CommandLineRunner {
 
         User admin = new User();
         admin.setUsername("admin");
-        admin.setPassword("admin");
+        admin.setPassword("1Admin@1");
         admin.setEmail("admin@email.com");
         admin.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_ADMIN)));
 
@@ -41,7 +41,7 @@ public class MicroServiceApp implements CommandLineRunner {
 
         User client = new User();
         client.setUsername("client");
-        client.setPassword("client");
+        client.setPassword("1Client@1");
         client.setEmail("client@email.com");
         client.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_CLIENT)));
 

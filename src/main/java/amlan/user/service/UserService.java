@@ -1,9 +1,14 @@
 package amlan.user.service;
 
+import amlan.common.constant.StatusConstants;
 import amlan.common.exception.CustomException;
+import amlan.common.exception.DuplicateEntityException;
+import amlan.employee.service.EmployeeService;
 import amlan.user.model.User;
 import amlan.user.repository.UserRepository;
 import amlan.common.config.security.JwtTokenProvider;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,8 +20,12 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
+import static amlan.common.constant.StatusConstants.HttpConstants.USERNAME_ALREADY_EXISTS;
+
 @Service
 public class UserService {
+
+    private static final Logger LOG = LogManager.getLogger(UserService.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -45,7 +54,8 @@ public class UserService {
             userRepository.save(user);
             return jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
         } else {
-            throw new CustomException("Username is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
+            LOG.error("Failed creating employee same email exists in database");
+            throw new DuplicateEntityException(StatusConstants.HttpConstants.USERNAME_ALREADY_EXISTS);
         }
     }
 
