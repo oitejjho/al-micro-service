@@ -5,6 +5,7 @@ import amlan.common.controller.ControllerSupport;
 import amlan.common.exception.DuplicateEntityException;
 import amlan.common.exception.InvalidRequestException;
 import amlan.common.exception.NotFoundException;
+import amlan.common.inteface.StringValidation;
 import amlan.common.model.Response;
 import amlan.employee.dto.EmployeeDTO;
 import amlan.employee.dto.EmployeeListDTO;
@@ -83,7 +84,7 @@ public class EmployeeController implements ControllerSupport {
 
     @PostMapping()
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @ApiOperation(value = "${EmployeeController.create}")
+    @ApiOperation(value = "${EmployeeController.create}", notes = "Possible response codes: 0, 35035, 35274, 35275, 35276, 35999")
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 403, message = "Access denied")})
@@ -99,6 +100,10 @@ public class EmployeeController implements ControllerSupport {
             }
             if (StringUtils.isEmpty(employee.getEmail())) {
                 throw new InvalidRequestException(StatusConstants.HttpConstants.EMPLOYEE_EMAIL_IS_REQUIRED);
+            }
+            StringValidation emailValidation = amlan.common.utils.StringUtils::isValidEmail;
+            if (!emailValidation.isValid(employee.getEmail(), null)) {
+                throw new InvalidRequestException(StatusConstants.HttpConstants.EMPLOYEE_EMAIL_IS_INVALID);
             }
             EmployeeDTO employeeDTO = employeeService.create(modelMapper.map(employee, Employee.class));
             LOG.info("Done creating employee");
@@ -122,9 +127,9 @@ public class EmployeeController implements ControllerSupport {
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 403, message = "Access denied")})
-    public Response<EmployeeDTO> update(@PathVariable Integer employeeId,
-                                        @ApiParam("Create employee") @RequestBody EmployeeRequest employee,
-                                        HttpServletResponse response) {
+    public Response update(@PathVariable Integer employeeId,
+                           @ApiParam("Create employee") @RequestBody EmployeeRequest employee,
+                           HttpServletResponse response) {
         try {
             LOG.info("Start updating employee by employee id : {}", employeeId);
             if (StringUtils.isEmpty(employee.getFirstName())) {
@@ -135,6 +140,10 @@ public class EmployeeController implements ControllerSupport {
             }
             if (StringUtils.isEmpty(employee.getEmail())) {
                 throw new InvalidRequestException(StatusConstants.HttpConstants.EMPLOYEE_EMAIL_IS_REQUIRED);
+            }
+            StringValidation emailValidation = amlan.common.utils.StringUtils::isValidEmail;
+            if (!emailValidation.isValid(employee.getEmail(), null)) {
+                throw new InvalidRequestException(StatusConstants.HttpConstants.EMPLOYEE_EMAIL_IS_INVALID);
             }
             EmployeeDTO employeeDTO = employeeService.update(employeeId, employee);
             LOG.info("Start updating employee by employee id : {}", employeeId);

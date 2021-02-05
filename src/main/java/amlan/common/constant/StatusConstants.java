@@ -21,6 +21,8 @@ public class StatusConstants {
 
         EMPLOYEE_DOES_NOT_EXIST(5, "Employee does not exists"),
 
+        EMPLOYEE_EMAIL_IS_INVALID(7, "Employee email is invalid"),
+
         EXTERNAL_SERVER_ERROR(35_998, "External Server Error"),
 
         INTERNAL_SERVER_ERROR(35_999, "Internal Server Error");
