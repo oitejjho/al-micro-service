@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-public class CreateEmployeeTest {
+public class UpdateEmployeeTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -60,48 +60,49 @@ public class CreateEmployeeTest {
                 parameterizedTypeReference
         );
         clientJwtToken = clientResponseEntity.getBody().getData();
+
+        //could create employee dynamically and update
+        //for the simplicity didn't implement rather keep the scope separated
     }
 
     @Test
-    public void createEmployeeSuccessWithAdmin() {
+    public void updateEmployeeSuccessWithAdmin() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("accept", "*/*");
         headers.setBearerAuth(adminJwtToken);
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         EmployeeRequest employeeRequest = EmployeeRequest.builder()
-                .firstName("test")
+                .firstName("oitejjho")
                 .lastName("test")
-                .email("test1@test.com")
+                .email("test@test.com")
                 .build();
         HttpEntity<EmployeeRequest> requestEntity = new HttpEntity<>(employeeRequest, headers);
         ResponseEntity<Response> responseEntity = restTemplate.exchange(
-                "http://localhost:8080/employees",
-                HttpMethod.POST,
+                "http://localhost:8080/employees/3",
+                HttpMethod.PUT,
                 requestEntity,
                 Response.class);
 
-        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
-        assertEquals(new Integer(0), responseEntity.getBody().getStatus().getCode());
-        assertEquals("Success", responseEntity.getBody().getStatus().getMessage());
+        assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
     }
 
     @Test
-    public void createEmployeeSuccessWithClient() {
+    public void updateEmployeeSuccessWithClient() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("accept", "*/*");
         headers.setBearerAuth(clientJwtToken);
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         EmployeeRequest employeeRequest = EmployeeRequest.builder()
-                .firstName("test")
+                .firstName("oitejjho")
                 .lastName("test")
                 .email("test@test.com")
                 .build();
         HttpEntity<EmployeeRequest> requestEntity = new HttpEntity<>(employeeRequest, headers);
         ResponseEntity<String> responseEntity = restTemplate.exchange(
-                "http://localhost:8080/employees",
-                HttpMethod.POST,
+                "http://localhost:8080/employees/3",
+                HttpMethod.PUT,
                 requestEntity,
                 String.class);
 
@@ -109,7 +110,7 @@ public class CreateEmployeeTest {
     }
 
     @Test
-    public void createEmployeeSuccessWithOutJwtToken() {
+    public void updateEmployeeSuccessWithOutJwtToken() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("accept", "*/*");
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -121,8 +122,8 @@ public class CreateEmployeeTest {
                 .build();
         HttpEntity<EmployeeRequest> requestEntity = new HttpEntity<>(employeeRequest, headers);
         ResponseEntity<String> responseEntity = restTemplate.exchange(
-                "http://localhost:8080/employees",
-                HttpMethod.POST,
+                "http://localhost:8080/employees/3",
+                HttpMethod.PUT,
                 requestEntity,
                 String.class);
 
@@ -130,7 +131,7 @@ public class CreateEmployeeTest {
     }
 
     @Test
-    public void createEmployeeFirstNameValidationSuccessWithAdmin() {
+    public void updateEmployeeFirstNameValidationSuccessWithAdmin() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("accept", "*/*");
         headers.setBearerAuth(adminJwtToken);
@@ -143,8 +144,8 @@ public class CreateEmployeeTest {
                 .build();
         HttpEntity<EmployeeRequest> requestEntity = new HttpEntity<>(employeeRequest, headers);
         ResponseEntity<Response> responseEntity = restTemplate.exchange(
-                "http://localhost:8080/employees",
-                HttpMethod.POST,
+                "http://localhost:8080/employees/3",
+                HttpMethod.PUT,
                 requestEntity,
                 Response.class);
 
@@ -154,7 +155,7 @@ public class CreateEmployeeTest {
     }
 
     @Test
-    public void createEmployeeLastNameValidationSuccessWithAdmin() {
+    public void updateEmployeeLastNameValidationSuccessWithAdmin() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("accept", "*/*");
         headers.setBearerAuth(adminJwtToken);
@@ -167,8 +168,8 @@ public class CreateEmployeeTest {
                 .build();
         HttpEntity<EmployeeRequest> requestEntity = new HttpEntity<>(employeeRequest, headers);
         ResponseEntity<Response> responseEntity = restTemplate.exchange(
-                "http://localhost:8080/employees",
-                HttpMethod.POST,
+                "http://localhost:8080/employees/3",
+                HttpMethod.PUT,
                 requestEntity,
                 Response.class);
 
@@ -178,7 +179,7 @@ public class CreateEmployeeTest {
     }
 
     @Test
-    public void createEmployeeEmailValidationSuccessWithAdmin() {
+    public void updateEmployeeEmailValidationSuccessWithAdmin() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("accept", "*/*");
         headers.setBearerAuth(adminJwtToken);
@@ -191,8 +192,8 @@ public class CreateEmployeeTest {
                 .build();
         HttpEntity<EmployeeRequest> requestEntity = new HttpEntity<>(employeeRequest, headers);
         ResponseEntity<Response> responseEntity = restTemplate.exchange(
-                "http://localhost:8080/employees",
-                HttpMethod.POST,
+                "http://localhost:8080/employees/3",
+                HttpMethod.PUT,
                 requestEntity,
                 Response.class);
 
@@ -202,7 +203,7 @@ public class CreateEmployeeTest {
     }
 
     @Test
-    public void createEmployeeEmailFormatValidationSuccessWithAdmin() {
+    public void updateEmployeeEmailFormatValidationSuccessWithAdmin() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("accept", "*/*");
         headers.setBearerAuth(adminJwtToken);
@@ -215,14 +216,62 @@ public class CreateEmployeeTest {
                 .build();
         HttpEntity<EmployeeRequest> requestEntity = new HttpEntity<>(employeeRequest, headers);
         ResponseEntity<Response> responseEntity = restTemplate.exchange(
-                "http://localhost:8080/employees",
-                HttpMethod.POST,
+                "http://localhost:8080/employees/3",
+                HttpMethod.PUT,
                 requestEntity,
                 Response.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         assertEquals(new Integer(7), responseEntity.getBody().getStatus().getCode());
         assertEquals("Email is invalid", responseEntity.getBody().getStatus().getMessage());
+    }
+
+    @Test
+    public void updateEmployeeNotFoundWithAdmin() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("accept", "*/*");
+        headers.setBearerAuth(adminJwtToken);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        EmployeeRequest employeeRequest = EmployeeRequest.builder()
+                .firstName("test")
+                .lastName("test")
+                .email("oitejjho@gmail.com")
+                .build();
+        HttpEntity<EmployeeRequest> requestEntity = new HttpEntity<>(employeeRequest, headers);
+        ResponseEntity<Response> responseEntity = restTemplate.exchange(
+                "http://localhost:8080/employees/10000",
+                HttpMethod.PUT,
+                requestEntity,
+                Response.class);
+
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(new Integer(5), responseEntity.getBody().getStatus().getCode());
+        assertEquals("Employee does not exists", responseEntity.getBody().getStatus().getMessage());
+    }
+
+    @Test
+    public void updateEmployeeEmailOccupiedAlreadyWithAdmin() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("accept", "*/*");
+        headers.setBearerAuth(adminJwtToken);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        EmployeeRequest employeeRequest = EmployeeRequest.builder()
+                .firstName("test")
+                .lastName("test")
+                .email("bill@bill.com")
+                .build();
+        HttpEntity<EmployeeRequest> requestEntity = new HttpEntity<>(employeeRequest, headers);
+        ResponseEntity<Response> responseEntity = restTemplate.exchange(
+                "http://localhost:8080/employees/3",
+                HttpMethod.PUT,
+                requestEntity,
+                Response.class);
+
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(new Integer(4), responseEntity.getBody().getStatus().getCode());
+        assertEquals("Employee email already exists", responseEntity.getBody().getStatus().getMessage());
     }
 
 }

@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-public class GetEmployeeListTest {
+public class GetEmployeeTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -66,7 +66,7 @@ public class GetEmployeeListTest {
     }
 
     @Test
-    public void createEmployeeSuccessWithAdmin() {
+    public void getEmployeeSuccessWithAdmin() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("accept", "*/*");
         headers.setBearerAuth(adminJwtToken);
@@ -74,7 +74,7 @@ public class GetEmployeeListTest {
 
         HttpEntity<EmployeeRequest> requestEntity = new HttpEntity<>(null, headers);
         ResponseEntity<Response> responseEntity = restTemplate.exchange(
-                "http://localhost:8080/employees",
+                "http://localhost:8080/employees/2",
                 HttpMethod.GET,
                 requestEntity,
                 Response.class);
@@ -85,7 +85,7 @@ public class GetEmployeeListTest {
     }
 
     @Test
-    public void createEmployeeSuccessWithClient() {
+    public void getEmployeeSuccessWithClient() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("accept", "*/*");
         headers.setBearerAuth(clientJwtToken);
@@ -93,7 +93,7 @@ public class GetEmployeeListTest {
 
         HttpEntity<EmployeeRequest> requestEntity = new HttpEntity<>(null, headers);
         ResponseEntity<String> responseEntity = restTemplate.exchange(
-                "http://localhost:8080/employees",
+                "http://localhost:8080/employees/2",
                 HttpMethod.GET,
                 requestEntity,
                 String.class);
@@ -102,18 +102,37 @@ public class GetEmployeeListTest {
     }
 
     @Test
-    public void createEmployeeSuccessWithOutJwtToken() {
+    public void getEmployeeSuccessWithOutJwtToken() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("accept", "*/*");
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<EmployeeRequest> requestEntity = new HttpEntity<>(null, headers);
         ResponseEntity<String> responseEntity = restTemplate.exchange(
-                "http://localhost:8080/employees",
+                "http://localhost:8080/employees/2",
                 HttpMethod.POST,
                 requestEntity,
                 String.class);
 
         assertEquals(HttpStatus.FORBIDDEN, responseEntity.getStatusCode());
+    }
+
+    @Test
+    public void getNonExistingEmployeeWithAdmin() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("accept", "*/*");
+        headers.setBearerAuth(adminJwtToken);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<EmployeeRequest> requestEntity = new HttpEntity<>(null, headers);
+        ResponseEntity<Response> responseEntity = restTemplate.exchange(
+                "http://localhost:8080/employees/10000",
+                HttpMethod.GET,
+                requestEntity,
+                Response.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+        assertEquals(new Integer(5), responseEntity.getBody().getStatus().getCode());
+        assertEquals("Employee does not exists", responseEntity.getBody().getStatus().getMessage());
     }
 }
