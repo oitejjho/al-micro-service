@@ -12,6 +12,7 @@ import amlan.user.dto.UserSignInRequest;
 import amlan.user.model.User;
 import amlan.user.service.UserService;
 import io.swagger.annotations.*;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
@@ -45,15 +46,25 @@ public class UserController implements ControllerSupport {
                                    HttpServletResponse response) {
         try {
             LOG.error("Start creating user with username: {}", user.getUsername());
+
+            if (StringUtils.isEmpty(user.getUsername()))
+                throw new InvalidRequestException(StatusConstants.HttpConstants.USERNAME_IS_REQUIRED);
+            if (StringUtils.isEmpty(user.getEmail()))
+                throw new InvalidRequestException(StatusConstants.HttpConstants.EMAIL_IS_REQUIRED);
+            if (StringUtils.isEmpty(user.getPassword()))
+                throw new InvalidRequestException(StatusConstants.HttpConstants.PASSWORD_IS_REQUIRED);
+            if (user.getRoles() == null || (user.getRoles() != null && user.getRoles().isEmpty()))
+                throw new InvalidRequestException(StatusConstants.HttpConstants.ROLE_IS_REQUIRED);
+
             StringValidation validation = amlan.common.utils.StringUtils::isValidEmail;
-            if (!validation.isValid(user.getEmail())) {
+            if (!validation.isValid(user.getEmail()))
                 throw new InvalidRequestException(StatusConstants.HttpConstants.EMAIL_IS_INVALID);
-            }
+
             validation = amlan.common.utils.StringUtils::isValidPassword;
             if (!validation.isValid(user.getPassword())) {
                 throw new InvalidRequestException(StatusConstants.HttpConstants.PASSWORD_IS_INVALID);
             }
-            return success(userService.signup(modelMapper.map(user, User.class)));
+            return created(userService.signup(modelMapper.map(user, User.class)), response);
         } catch (InvalidRequestException e) {
             LOG.error("Failed creating user with bad request: {}, {}", e, e.getMessage());
             return badRequest(e.getStatus(), response);

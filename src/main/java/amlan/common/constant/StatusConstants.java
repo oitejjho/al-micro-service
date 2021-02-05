@@ -29,6 +29,14 @@ public class StatusConstants {
 
         UNAUTHORIZED_ACCESS(10, "Unauthorized access"),
 
+        USERNAME_IS_REQUIRED(11, "Username is required"),
+
+        EMAIL_IS_REQUIRED(12, "Email is required"),
+
+        PASSWORD_IS_REQUIRED(13, "Password is required"),
+
+        ROLE_IS_REQUIRED(14, "Role is required"),
+
         EXTERNAL_SERVER_ERROR(35_998, "External Server Error"),
 
         INTERNAL_SERVER_ERROR(35_999, "Internal Server Error");

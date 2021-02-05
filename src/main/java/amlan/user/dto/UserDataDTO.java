@@ -2,9 +2,11 @@ package amlan.user.dto;
 
 import amlan.user.model.Role;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 
 import java.util.List;
 
+@Builder
 public class UserDataDTO {
 
     @ApiModelProperty(position = 3)
