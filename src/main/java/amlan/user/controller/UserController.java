@@ -2,11 +2,13 @@ package amlan.user.controller;
 
 import amlan.common.constant.StatusConstants;
 import amlan.common.controller.ControllerSupport;
+import amlan.common.exception.CustomException;
 import amlan.common.exception.DuplicateEntityException;
 import amlan.common.exception.InvalidRequestException;
 import amlan.common.inteface.StringValidation;
 import amlan.common.model.Response;
 import amlan.user.dto.UserDataDTO;
+import amlan.user.dto.UserSignInRequest;
 import amlan.user.model.User;
 import amlan.user.service.UserService;
 import io.swagger.annotations.*;
@@ -69,9 +71,19 @@ public class UserController implements ControllerSupport {
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Something went wrong"),
             @ApiResponse(code = 422, message = "Invalid username/password supplied")})
-    public String login(@ApiParam("Username") @RequestParam String username,
-                        @ApiParam("Password") @RequestParam String password) {
-        return userService.signin(username, password);
+    public Response<String> login(@ApiParam("Signup User") @RequestBody UserSignInRequest user,
+                                  HttpServletResponse response) {
+        try {
+            LOG.error("Start login user with username: {}", user.getUsername());
+            return success(userService.signin(user.getUsername(), user.getPassword()));
+        } catch (CustomException e) {
+            LOG.error("Failed login user with bad request: {}, {}", e, e.getMessage());
+            return unauthorizedAccess(response);// 422 can be used as well but preferred to use 401
+        } catch (Exception e) {
+            LOG.error("Failed login user error: {}, {}", e, e.getMessage());
+            return serverError(response);
+        }
+
     }
 
     @GetMapping("/refresh")

@@ -84,7 +84,7 @@ public class EmployeeController implements ControllerSupport {
 
     @PostMapping()
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @ApiOperation(value = "${EmployeeController.create}", notes = "Possible response codes: 0, 35035, 35274, 35275, 35276, 35999")
+    @ApiOperation(value = "${EmployeeController.create}", notes = "Possible response codes: ")
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 403, message = "Access denied")})

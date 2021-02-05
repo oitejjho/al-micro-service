@@ -2,12 +2,14 @@ package amlan.integration.employee;
 
 import amlan.common.model.Response;
 import amlan.employee.dto.EmployeeRequest;
+import amlan.user.dto.UserSignInRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -31,22 +33,33 @@ public class CreateEmployeeTest {
         //based on profiles
         //for the simplicity I used hardcoded value.
 
-        ResponseEntity<String> adminResponseEntity = restTemplate.exchange(
-                "http://localhost:8080/users/signin?password=1Admin@1&username=admin",
+        UserSignInRequest userSignInRequestAdmin = UserSignInRequest.builder()
+                .username("admin")
+                .password("1Admin@1")
+                .build();
+        HttpEntity<UserSignInRequest> requestEntityAdmin = new HttpEntity<>(userSignInRequestAdmin);
+        ParameterizedTypeReference<Response<String>> parameterizedTypeReference = new ParameterizedTypeReference<Response<String>>() {
+        };
+        ResponseEntity<Response<String>> adminResponseEntity = restTemplate.exchange(
+                "http://localhost:8080/users/signin",
                 HttpMethod.POST,
-                null,
-                String.class
+                requestEntityAdmin,
+                parameterizedTypeReference
         );
-        adminJwtToken = adminResponseEntity.getBody();
+        adminJwtToken = adminResponseEntity.getBody().getData();
 
-        ResponseEntity<String> clientResponseEntity = restTemplate.exchange(
+        UserSignInRequest userSignInRequestClient = UserSignInRequest.builder()
+                .username("client")
+                .password("1Client@1")
+                .build();
+        HttpEntity<UserSignInRequest> requestEntityClient = new HttpEntity<>(userSignInRequestClient);
+        ResponseEntity<Response<String>> clientResponseEntity = restTemplate.exchange(
                 "http://localhost:8080/users/signin?password=1Client@1&username=client",
                 HttpMethod.POST,
-                null,
-                String.class
+                requestEntityClient,
+                parameterizedTypeReference
         );
-        adminJwtToken = adminResponseEntity.getBody();
-        clientJwtToken = clientResponseEntity.getBody();
+        clientJwtToken = clientResponseEntity.getBody().getData();
     }
 
     @Test

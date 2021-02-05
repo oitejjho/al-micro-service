@@ -27,6 +27,8 @@ public class StatusConstants {
 
         USERNAME_ALREADY_EXISTS(9, "Username already exists"),
 
+        UNAUTHORIZED_ACCESS(10, "Unauthorized access"),
+
         EXTERNAL_SERVER_ERROR(35_998, "External Server Error"),
 
         INTERNAL_SERVER_ERROR(35_999, "Internal Server Error");
