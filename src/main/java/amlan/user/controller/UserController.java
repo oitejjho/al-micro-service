@@ -86,7 +86,14 @@ public class UserController implements ControllerSupport {
                                   HttpServletResponse response) {
         try {
             LOG.error("Start login user with username: {}", user.getUsername());
+            if (StringUtils.isEmpty(user.getUsername()))
+                throw new InvalidRequestException(StatusConstants.HttpConstants.USERNAME_IS_REQUIRED);
+            if (StringUtils.isEmpty(user.getPassword()))
+                throw new InvalidRequestException(StatusConstants.HttpConstants.PASSWORD_IS_REQUIRED);
             return success(userService.signin(user.getUsername(), user.getPassword()));
+        } catch (InvalidRequestException e) {
+            LOG.error("Failed login user with bad request: {}, {}", e, e.getMessage());
+            return badRequest(e.getStatus(), response);
         } catch (CustomException e) {
             LOG.error("Failed login user with bad request: {}, {}", e, e.getMessage());
             return unauthorizedAccess(response);// 422 can be used as well but preferred to use 401
@@ -99,8 +106,8 @@ public class UserController implements ControllerSupport {
 
     @GetMapping("/refresh")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
-    public String refresh(HttpServletRequest req) {
-        return userService.refresh(req.getRemoteUser());
+    public Response<String> refresh(HttpServletRequest req) {
+        return success(userService.refresh(req.getRemoteUser()));
     }
 
 
