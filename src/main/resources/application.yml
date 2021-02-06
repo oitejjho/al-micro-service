@@ -18,11 +18,13 @@ spring:
         id:
           new_generator_mappings: false
 
+#this config can be customized but for the simplicity leave it like this
 management:
   endpoints:
     web:
       exposure:
         include: "*"
+
 
 server:
    port: 8080 # This is the default port anyway, but you can change it here
