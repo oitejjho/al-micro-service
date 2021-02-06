@@ -29,6 +29,8 @@ RUN apk add git
 WORKDIR /data
 RUN git clone https://github.com/oitejjho/al-micro-service.git
 WORKDIR /data/al-micro-service
+RUN git checkout master
+RUN git pull origin master
 RUN mvn install
 
 RUN mkdir /app

@@ -24,13 +24,5 @@ public class WebConfig implements WebMvcConfigurer {
         configurer.setUseSuffixPatternMatch(false);
     }
 
-    /*@Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/activities-agg/swagger-ui.html**")
-                .addResourceLocations("classpath:/META-INF/resources/swagger-ui.html");
-        registry.addResourceHandler("/activities-agg/webjars/**")
-                .addResourceLocations("classpath:/META-INF/resources/webjars/");
-    }*/
-
 
 }
